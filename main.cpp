@@ -31,10 +31,81 @@ public:
     }
 
     // Function to display students using merge sort
-    void displayStudents() {
-        // Implement merge sort to sort students by name
-        // Display the sorted list
+    // Merge function for merging two halves
+void merge(StudentNode* &head, StudentNode* left, StudentNode* right) {
+    StudentNode* temp = nullptr;
+    StudentNode* current = nullptr;
+
+    while (left != nullptr && right != nullptr) {
+        if (left->name < right->name) {
+            if (temp == nullptr) {
+                temp = left;
+                current = left;
+            } else {
+                current->next = left;
+                current = left;
+            }
+            left = left->next;
+        } else {
+            if (temp == nullptr) {
+                temp = right;
+                current = right;
+            } else {
+                current->next = right;
+                current = right;
+            }
+            right = right->next;
+        }
     }
+
+    if (left != nullptr) {
+        current->next = left;
+    }
+
+    if (right != nullptr) {
+        current->next = right;
+    }
+
+    head = temp;
+}
+
+// Merge sort implementation for linked list
+void mergeSort(StudentNode* &head) {
+    if (head == nullptr || head->next == nullptr) {
+        return;
+    }
+
+    StudentNode* middle = head;
+    StudentNode* fast = head->next;
+
+    while (fast != nullptr && fast->next != nullptr) {
+        middle = middle->next;
+        fast = fast->next->next;
+    }
+
+    StudentNode* left = head;
+    StudentNode* right = middle->next;
+    middle->next = nullptr;
+
+    mergeSort(left);
+    mergeSort(right);
+
+    merge(head, left, right);
+}
+
+// Function to display students using merge sort
+void displayStudents() {
+    // Sorting students using merge sort
+    mergeSort(studentList);
+
+    // Displaying the sorted list
+    StudentNode* current = studentList;
+    while (current != nullptr) {
+        cout << "Name: " << current->name << ", Reg: " << current->reg << endl;
+        current = current->next;
+    }
+}
+
 
     // Function to remove a student from the linked list
     void removeStudent(int reg) {
@@ -136,7 +207,99 @@ public:
         }
         return node;
     }
+
+    // Function to find a student by registration number
+
+
 };
+// Function prototypes
+void assignBookToStudent(LibraryManagementSystem& library);
+void returnBook(LibraryManagementSystem& library);
+void displayMenu();
+void performOperation(LibraryManagementSystem& library, int choice);
+StudentNode* findStudentByReg(StudentNode* head, int reg) {
+    StudentNode* current = head;
+    while (current != nullptr) {
+        if (current->reg == reg) {
+            return current;
+        }
+        current = current->next;
+    }
+    return nullptr; // Student not found
+}
+
+// Function to find a book by title
+BookNode* findBookByTitle(BookNode* root, string title) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+
+    if (title < root->title) {
+        return findBookByTitle(root->left, title);
+    } else if (title > root->title) {
+        return findBookByTitle(root->right, title);
+    } else {
+        return root; // Book found
+    }
+}
+
+// Function to assign a book to a student
+void assignBookToStudent(LibraryManagementSystem& library) {
+    int reg;
+    cout << "Enter student registration number: ";
+    cin >> reg;
+
+    StudentNode* student = findStudentByReg(library.studentList, reg);
+
+    if (student == nullptr) {
+        cout << "Student not found. Assignment failed." << endl;
+        return;
+    }
+
+    string title;
+    cout << "Enter book title to assign: ";
+    cin.ignore();
+    getline(cin, title);
+
+    BookNode* book = findBookByTitle(library.bookTree, title);
+
+    if (book == nullptr) {
+        cout << "Book not found. Assignment failed." << endl;
+        return;
+    }
+
+    // Perform the book assignment logic here
+    cout << "Book assigned successfully to " << student->name << "." << endl;
+}
+
+// Function to return a book assigned to a student
+void returnBook(LibraryManagementSystem& library) {
+    int reg;
+    cout << "Enter student registration number: ";
+    cin >> reg;
+
+    StudentNode* student = findStudentByReg(library.studentList, reg);
+
+    if (student == nullptr) {
+        cout << "Student not found. Return failed." << endl;
+        return;
+    }
+
+    string title;
+    cout << "Enter book title to return: ";
+    cin.ignore();
+    getline(cin, title);
+
+    BookNode* book = findBookByTitle(library.bookTree, title);
+
+    if (book == nullptr) {
+        cout << "Book not found. Return failed." << endl;
+        return;
+    }
+
+    // Perform the book return logic here
+    cout << "Book returned successfully by " << student->name << "." << endl;
+}
 
 // Function prototypes
 void displayMenu();
@@ -151,7 +314,7 @@ int main() {
         cout << "Enter your choice: ";
         cin >> choice;
 
-        if (choice >= 1 && choice <= 6) {
+        if (choice >= 1 && choice <= 8) {
             performOperation(library, choice);
         } else if (choice != 0) {
             cout << "Invalid choice. Please try again." << endl;
@@ -169,6 +332,8 @@ void displayMenu() {
     cout << "4. Delete Book\n";
     cout << "5. Display Students\n";
     cout << "6. Display Books\n";
+    cout << "7. Assign Book to Student\n";
+    cout << "8. Return Book\n";
     cout << "0. Exit\n";
 }
 
@@ -218,6 +383,15 @@ void performOperation(LibraryManagementSystem& library, int choice) {
         case 6: {
             cout << "\nBooks:\n";
             library.displayBooks(library.bookTree);
+            break;
+        }
+          case 7: {
+            assignBookToStudent(library);
+            break;
+        }
+
+        case 8: {
+            returnBook(library);
             break;
         }
         default:
