@@ -22,16 +22,11 @@ public:
     BookNode* bookTree;
 
     LibraryManagementSystem() : studentList(nullptr), bookTree(nullptr) {}
-
-    // Function to add a student to the linked list
     void addStudent(string name, int reg) {
-        StudentNode* newNode = new StudentNode{ name, reg, nullptr };
+        StudentNode* newNode = new StudentNode{name, reg, nullptr };
         newNode->next = studentList;
         studentList = newNode;
     }
-
-    // Function to display students using merge sort
-    // Merge function for merging two halves
 void merge(StudentNode* &head, StudentNode* left, StudentNode* right) {
     StudentNode* temp = nullptr;
     StudentNode* current = nullptr;
@@ -69,20 +64,16 @@ void merge(StudentNode* &head, StudentNode* left, StudentNode* right) {
     head = temp;
 }
 
-// Merge sort implementation for linked list
 void mergeSort(StudentNode* &head) {
     if (head == nullptr || head->next == nullptr) {
         return;
     }
-
     StudentNode* middle = head;
     StudentNode* fast = head->next;
-
-    while (fast != nullptr && fast->next != nullptr) {
+    while(fast != nullptr && fast->next != nullptr) {
         middle = middle->next;
         fast = fast->next->next;
     }
-
     StudentNode* left = head;
     StudentNode* right = middle->next;
     middle->next = nullptr;
@@ -93,53 +84,41 @@ void mergeSort(StudentNode* &head) {
     merge(head, left, right);
 }
 
-// Function to display students using merge sort
-void displayStudents() {
-    // Sorting students using merge sort
-    mergeSort(studentList);
 
-    // Displaying the sorted list
+void displayStudents() {
+
+    mergeSort(studentList);
     StudentNode* current = studentList;
     while (current != nullptr) {
-        cout << "Name: " << current->name << ", Reg: " << current->reg << endl;
+        cout << "Student ka Naam: " << current->name << ", Student Reg: " << current->reg << endl;
         current = current->next;
     }
 }
-
-
-    // Function to remove a student from the linked list
-    void removeStudent(int reg) {
+void removeStudent(int reg) {
         StudentNode* current = studentList;
         StudentNode* prev = nullptr;
-
-        while (current != nullptr && current->reg != reg) {
+        while(current != nullptr && current->reg != reg) {
             prev = current;
             current = current->next;
         }
-
-        if (current == nullptr) {
-            cout << "Student not found." << endl;
+        if(current == nullptr) {
+            cout << "Student doesnt exist." << endl;
             return;
         }
-
         if (prev == nullptr) {
             studentList = current->next;
         } else {
             prev->next = current->next;
         }
-
         delete current;
         cout << "Student removed successfully." << endl;
     }
-
-    // Function to add a book to the binary search tree
     void addBook(string title, string author) {
         bookTree = insertBook(bookTree, title, author);
         cout << "Book added successfully." << endl;
     }
-
-    // Recursive function to insert a book into the BST
-    BookNode* insertBook(BookNode* root, string title, string author) {
+    
+BookNode* insertBook(BookNode* root, string title, string author) {
         if (root == nullptr) {
             return new BookNode{ title, author, nullptr, nullptr };
         }
@@ -152,8 +131,6 @@ void displayStudents() {
 
         return root;
     }
-
-    // Function to display books using inorder traversal
     void displayBooks(BookNode* root) {
         if (root != nullptr) {
             displayBooks(root->left);
@@ -162,14 +139,13 @@ void displayStudents() {
         }
     }
 
-    // Function to delete a book from the binary search tree
     void deleteBook(string title) {
         bookTree = deleteBookNode(bookTree, title);
         cout << "Book deleted successfully." << endl;
     }
 
     // Recursive function to delete a book from the BST
-    BookNode* deleteBookNode(BookNode* root, string title) {
+BookNode* deleteBookNode(BookNode* root, string title) {
         if (root == nullptr) {
             return root;
         }
