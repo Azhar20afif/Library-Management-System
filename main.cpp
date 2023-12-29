@@ -113,16 +113,15 @@ void removeStudent(int reg) {
         delete current;
         cout << "Student removed successfully." << endl;
     }
-    void addBook(string title, string author) {
+void addBook(string title, string author) {
         bookTree = insertBook(bookTree, title, author);
         cout << "Book added successfully." << endl;
     }
-    
+
 BookNode* insertBook(BookNode* root, string title, string author) {
         if (root == nullptr) {
             return new BookNode{ title, author, nullptr, nullptr };
         }
-
         if (title < root->title) {
             root->left = insertBook(root->left, title, author);
         } else if (title > root->title) {
@@ -131,20 +130,19 @@ BookNode* insertBook(BookNode* root, string title, string author) {
 
         return root;
     }
-    void displayBooks(BookNode* root) {
+void displayBooks(BookNode* root) {
         if (root != nullptr) {
             displayBooks(root->left);
-            cout << "Title: " << root->title << ", Author: " << root->author << endl;
+            cout << "Title of book: " << root->title << ", Author of book: " << root->author << endl;
             displayBooks(root->right);
         }
     }
 
-    void deleteBook(string title) {
+void deleteBook(string title) {
         bookTree = deleteBookNode(bookTree, title);
         cout << "Book deleted successfully." << endl;
     }
 
-    // Recursive function to delete a book from the BST
 BookNode* deleteBookNode(BookNode* root, string title) {
         if (root == nullptr) {
             return root;
@@ -155,7 +153,7 @@ BookNode* deleteBookNode(BookNode* root, string title) {
         } else if (title > root->title) {
             root->right = deleteBookNode(root->right, title);
         } else {
-            // Node with only one child or no child
+
             if (root->left == nullptr) {
                 BookNode* temp = root->right;
                 delete root;
@@ -165,8 +163,6 @@ BookNode* deleteBookNode(BookNode* root, string title) {
                 delete root;
                 return temp;
             }
-
-            // Node with two children
             BookNode* temp = findMin(root->right);
             root->title = temp->title;
             root->author = temp->author;
@@ -176,19 +172,13 @@ BookNode* deleteBookNode(BookNode* root, string title) {
         return root;
     }
 
-    // Function to find the node with the minimum value in a BST
-    BookNode* findMin(BookNode* node) {
+BookNode* findMin(BookNode* node) {
         while (node->left != nullptr) {
             node = node->left;
         }
         return node;
     }
-
-    // Function to find a student by registration number
-
-
 };
-// Function prototypes
 void assignBookToStudent(LibraryManagementSystem& library);
 void returnBook(LibraryManagementSystem& library);
 void displayMenu();
@@ -201,10 +191,8 @@ StudentNode* findStudentByReg(StudentNode* head, int reg) {
         }
         current = current->next;
     }
-    return nullptr; // Student not found
+    return nullptr;
 }
-
-// Function to find a book by title
 BookNode* findBookByTitle(BookNode* root, string title) {
     if (root == nullptr) {
         return nullptr;
@@ -215,23 +203,20 @@ BookNode* findBookByTitle(BookNode* root, string title) {
     } else if (title > root->title) {
         return findBookByTitle(root->right, title);
     } else {
-        return root; // Book found
+        return root; 
     }
 }
-
-// Function to assign a book to a student
 void assignBookToStudent(LibraryManagementSystem& library) {
     int reg;
-    cout << "Enter student registration number: ";
+    cout << "Enter students reg num: ";
     cin >> reg;
 
     StudentNode* student = findStudentByReg(library.studentList, reg);
 
     if (student == nullptr) {
-        cout << "Student not found. Assignment failed." << endl;
+        cout << "Student was not found, Book cannot be assigned" << endl;
         return;
     }
-
     string title;
     cout << "Enter book title to assign: ";
     cin.ignore();
@@ -240,15 +225,11 @@ void assignBookToStudent(LibraryManagementSystem& library) {
     BookNode* book = findBookByTitle(library.bookTree, title);
 
     if (book == nullptr) {
-        cout << "Book not found. Assignment failed." << endl;
+        cout << "Book was not found. Book cannot be assigned" << endl;
         return;
     }
-
-    // Perform the book assignment logic here
     cout << "Book assigned successfully to " << student->name << "." << endl;
 }
-
-// Function to return a book assigned to a student
 void returnBook(LibraryManagementSystem& library) {
     int reg;
     cout << "Enter student registration number: ";
@@ -272,12 +253,9 @@ void returnBook(LibraryManagementSystem& library) {
         cout << "Book not found. Return failed." << endl;
         return;
     }
-
-    // Perform the book return logic here
     cout << "Book returned successfully by " << student->name << "." << endl;
 }
 
-// Function prototypes
 void displayMenu();
 void performOperation(LibraryManagementSystem& library, int choice);
 
@@ -301,17 +279,19 @@ int main() {
 }
 
 void displayMenu() {
-    cout << "\nLibrary Management System Menu:\n";
-    cout << "1. Add Student\n";
-    cout << "2. Remove Student\n";
-    cout << "3. Add Book\n";
-    cout << "4. Delete Book\n";
-    cout << "5. Display Students\n";
-    cout << "6. Display Books\n";
-    cout << "7. Assign Book to Student\n";
-    cout << "8. Return Book\n";
-    cout << "0. Exit\n";
+    cout << "\n\t\t\t\t\t\t\033[1;36mGIKI LIBRARY MANAGEMENT SYSTEM:\033[0m\n"; 
+    cout << "\n\t\t\t\t\t\t\033[1;36mBY AZHAR , ALI , HAMZA AND WADOOD\033[0m\n"; 
+    cout << "\033[1;33m1. Add Student\n\033[0m";  
+    cout << "\033[1;33m2. Remove Student\n\033[0m";  
+    cout << "\033[1;33m4. Delete Book\n\033[0m";  
+    cout << "\033[1;33m5. Display Students\n\033[0m"; 
+    cout << "\033[1;33m6. Display Books\n\033[0m";  
+    cout << "\033[1;33m7. Assign Book to Student\n\033[0m";  
+    cout << "\033[1;33m8. Return Book\n\033[0m";  
+    cout << "\033[1;33m0. Exit\n\033[0m";  
 }
+
+
 
 void performOperation(LibraryManagementSystem& library, int choice) {
     switch (choice) {
@@ -321,14 +301,14 @@ void performOperation(LibraryManagementSystem& library, int choice) {
             cout << "Enter student name: ";
             cin.ignore();
             getline(cin, name);
-            cout << "Enter registration number: ";
+            cout << "Enter their reg number: ";
             cin >> reg;
             library.addStudent(name, reg);
             break;
         }
         case 2: {
             int reg;
-            cout << "Enter registration number of the student to remove: ";
+            cout << "The reg number of the student that has to be removed: ";
             cin >> reg;
             library.removeStudent(reg);
             break;
